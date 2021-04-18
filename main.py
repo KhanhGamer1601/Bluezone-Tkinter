@@ -1,6 +1,6 @@
 #import library
 from tkinter import*
-from datetime import*
+from time import*
 from tkinter import messagebox
 
 #main code
@@ -25,11 +25,10 @@ class App:
         self.Username_entry.place(x = 270, y = 50)
 
         self.Date_List = [
-            1,2,3,4,5,6,7,8,9,10,11,12,13,15,16,17,18,19
-            ,20,21,22,23,24,25,26,27,28,29,30,31
+            i for i in range(1, 32)
         ]
         self.Month_List = [
-            1,2,3,4,5,6,7,8,9,10,11,12
+            i for i in range(1, 13)
         ]
 
         self.Date_Var = IntVar()
@@ -45,9 +44,9 @@ class App:
         self.Male = Radiobutton(self.app, text = 'Male', variable = self.Gender, value = 1).place(x = 150, y = 200)
         self.Female = Radiobutton(self.app, text = 'Female', variable = self.Gender, value = 2).place(x = 230, y = 200)
 
-        self.Now = datetime.now()
-        self.Datetime = self.Now.strftime('%H hours %M minutes %S seconds')
-        self.Show_Datetime = Label(self.app, text = 'Time: ' + self.Datetime).place(x = 150, y = 250)
+        self.Show_Datetime = Label(self.app, text = 'Time: ')
+        self.Show_Datetime.place(x = 150, y = 250)
+        self.UpdateTime()
 
         self.Countries = [
             'Vietnam',
@@ -75,6 +74,32 @@ class App:
         self.app.mainloop()
 
     def Next(self):
+        try:
+            self.HandleUsername = [self.Username_entry, self.Username_Data]
+
+            if self.HandleUsername[1].get() == '':
+                self.HandleUsername[0].configure(bg = 'red')
+            if self.Gender.get() == 0:
+                return messagebox.showinfo('notification', 'You have forgotten to choose the gender !')
+            if self.Nationality_var.get() == '':
+                return messagebox.showinfo('notification', 'You have forgotten to choose the nationality !')
+            if self.Date_Var.get() == 0:
+                return messagebox.showinfo('notification', 'You have forgotten to choose the date !')
+            if self.Month_Var.get() == 0:
+                return messagebox.showinfo('notification', 'You have forgotten to choose the month !')
+            if self.Date_Var.get() == 30 or self.Date_Var.get() == 31 and self.Month_Var.get() == 2:
+                return messagebox.showinfo('notification', 'Does not exist !')
+            else:
+                self.HandleUsername[0].configure(bg = 'white')
+            Save = open(self.Username_Data.get(), 'a')
+            Save.write(self.Username_Data.get() + '\n')
+            Save.write(str(self.Date_Var.get()) + '\n')
+            Save.write(str(self.Month_Var.get()) + '\n')
+            Save.write(str(self.Gender.get()) + '\n')
+            Save.write(self.Nationality_var.get() + '\n')
+        except:
+            messagebox.showinfo('Error', 'error')
+
         page = Toplevel(self.app)
         page.geometry('600x600+0+0')
         page_title = Label(page, text = 'Bluezone', font = ('Times', 16)).pack()
@@ -95,7 +120,6 @@ class App:
 
     def Bluezone_Submit(self):
         self.entrylist = [
-            [self.Username_entry, self.Username_Data], 
             [self.User_Position_Entry, self.User_var], 
             [self.User_Target_Entry, self.User_Target_Var], 
             [self.User_Health_Entry, self.User_Health_Var],
@@ -111,20 +135,7 @@ class App:
                     i[0].configure(bg='white')
             if errorcount != 0:    
                 return messagebox.showwarning('notification', 'Missing Infomation!')
-            if self.Gender.get() == 0:
-                return messagebox.showinfo('notification', 'You have forgotten to choose the gender !')
-            if self.Nationality_var.get() == '':
-                return messagebox.showinfo('notification', 'You have forgotten to choose the nationality !')
-            if self.Date_Var.get() == 0:
-                return messagebox.showinfo('notification', 'You have forgotten to choose the date !')
-            if self.Month_Var.get() == 0:
-                return messagebox.showinfo('notification', 'You have forgotten to choose the month !')
             Save = open(self.Username_Data.get(), 'a')
-            Save.write(self.Username_Data.get() + '\n')
-            Save.write(self.Date_Var.get() + '\n')
-            Save.write(self.Month_Var.get() + '\n')
-            Save.write(str(self.Gender.get()) + '\n')
-            Save.write(self.Nationality_var.get() + '\n')
             Save.write(self.User_var.get() + '\n')
             Save.write(self.User_Target_Var.get() + '\n')
             Save.write(self.User_Health_Var.get() + '\n')
@@ -133,6 +144,10 @@ class App:
         except:
             messagebox.showinfo('Error','error')
 
+    def UpdateTime(self):
+        current_time = strftime('%H:%M:%S')
+        self.Show_Datetime.config(text = current_time)
+        self.Show_Datetime.after(200, self.UpdateTime)
 
     def About(self):
         notification = 'This app has been created because the gornverment need to control your activities when covid-19 is raging !'
