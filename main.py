@@ -68,18 +68,14 @@ class App:
 
         self.User_var = StringVar()
         self.User_Target_Var = StringVar()
-        self.User_Health_Var = StringVar()
 
         self.User_Position_Entry = None
         self.User_Target_Entry = None
-        self.User_Health_Entry = None
         
-        self.Health_List = [
-            'cough',
-            'sneeze',
-            'snivel',
-            'shortness of breath',
-        ]
+        self.Cough_Var = StringVar()
+        self.Sneeze_Var = StringVar()
+        self.Snivel_Var = StringVar()
+        self.Shortness_Of_Breath_Var = StringVar()
 
         self.Next = Button(self.app, text = 'Next', width = 16, command = self.Next).place(x = 150, y = 400)
 
@@ -129,16 +125,25 @@ class App:
         self.User_Target_Entry.place(x = 270, y = 100)
 
         self.User_Health = Label(page, text = 'Your health: ').place(x = 150, y = 150)
-        self.User_Health_Entry = OptionMenu(page, self.User_Health_Var, *self.Health_List)
-        self.User_Health_Entry.place(x = 270, y = 150)
+        self.Cough = Checkbutton(page, text = 'Cough', variable = self.Cough_Var, onvalue = 'Cough', offvalue = 'None')
+        self.Cough.deselect()
+        self.Cough.place(x = 150, y = 200)
+        self.Sneeze = Checkbutton(page, text = 'Sneeze', variable = self.Sneeze_Var, onvalue = 'Sneeze', offvalue = 'None')
+        self.Sneeze.deselect()
+        self.Sneeze.place(x = 150, y = 250)
+        self.Snivel = Checkbutton(page, text = 'Snivel', variable = self.Snivel_Var, onvalue = 'Snivel', offvalue = 'None')
+        self.Snivel.deselect()
+        self.Snivel.place(x = 150, y = 300)
+        self.Shortness_Of_Breath = Checkbutton(page, text = 'Shortness of breath', variable = self.Shortness_Of_Breath_Var, onvalue = 'Shortness of breath', offvalue = 'None')
+        self.Shortness_Of_Breath.deselect()
+        self.Shortness_Of_Breath.place(x = 150, y = 350) 
 
-        Submit = Button(page, text = 'Submit', width = 16, command = self.Bluezone_Submit).place(x = 150, y = 200)
+        Submit = Button(page, text = 'Submit', width = 16, command = self.Bluezone_Submit).place(x = 150, y = 400)
 
     def Bluezone_Submit(self):
         self.entrylist = [
             [self.User_Position_Entry, self.User_var], 
             [self.User_Target_Entry, self.User_Target_Var], 
-            [self.User_Health_Entry, self.User_Health_Var],
         ]
 
         try:
@@ -154,7 +159,10 @@ class App:
             Save = open(self.Username_Data.get(), 'a')
             Save.write(self.User_var.get() + '\n')
             Save.write(self.User_Target_Var.get() + '\n')
-            Save.write(self.User_Health_Var.get() + '\n')
+            Save.write(self.Cough_Var.get() + '\n')
+            Save.write(self.Sneeze_Var.get() + '\n')
+            Save.write(self.Snivel_Var.get() + '\n')
+            Save.write(self.Shortness_Of_Breath_Var.get() + '\n')
             Save.close()
             messagebox.showinfo('notification', 'Thank you for submiting !')
         except:
