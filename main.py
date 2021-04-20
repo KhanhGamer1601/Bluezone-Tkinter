@@ -181,7 +181,7 @@ class App:
             self.Date['values'] = self.Date_List[0:28]
 
     def BornYear(self, event):
-        if int(self.Year.get()) % 4 == 0 and int(self.Month.get()) == 2:
+        if int(self.Year.get()) % 4 == 0:
             self.Date['values'] = self.Date_List[0:29]
 
     def About(self):
