@@ -2,6 +2,7 @@
 from tkinter import*
 from time import*
 from tkinter import messagebox
+from tkinter.ttk import*
 
 #main code
 class App:
@@ -34,17 +35,23 @@ class App:
             i for i in range(1900, 2022)
         ]
 
-        self.Date_Var = IntVar()
-        self.Month_Var = IntVar()
-        self.Year_Var = IntVar()
-
         self.Date_Label = Label(self.app, text = 'Date you were born: ').place(x = 150, y = 100)
         self.Month_Label = Label(self.app, text = 'Month you were born: ').place(x = 150, y = 150)
         self.Year_Label = Label(self.app, text = 'Year you were born: ').place(x = 150, y = 200)
 
-        self.Date = OptionMenu(self.app, self.Date_Var, *self.Date_List).place(x = 280, y = 100)
-        self.Month = OptionMenu(self.app, self.Month_Var, *self.Month_List).place(x = 280, y = 150)
-        self.Year = OptionMenu(self.app, self.Year_Var, *self.Year_List).place(x = 280, y = 200)
+        self.Date = Combobox(self.app)
+        self.Date['values'] = self.Date_List
+        self.Date.place(x = 280, y = 100)
+
+        self.Month = Combobox(self.app)
+        self.Month['values'] = self.Month_List
+        self.Month.place(x = 280, y = 150)
+        self.Month.bind('<<ComboboxSelected>>', self.BornMonth)
+
+        self.Year = Combobox(self.app)
+        self.Year['values'] = self.Year_List
+        self.Year.place(x = 280, y = 200)
+        self.Year.bind('<<ComboboxSelected>>', self.BornYear)
 
         self.Gender = IntVar()
         self.Male = Radiobutton(self.app, text = 'Male', variable = self.Gender, value = 1).place(x = 150, y = 250)
@@ -61,9 +68,9 @@ class App:
             'Japan',
         ]
 
-        self.Nationality_var = StringVar()
         self.Nationality_Label = Label(self.app, text = 'Nationality: ').place(x = 150, y = 350)
-        self.Nationality = OptionMenu(self.app, self.Nationality_var, *self.Countries)
+        self.Nationality = Combobox(self.app)
+        self.Nationality['values'] = self.Countries
         self.Nationality.place(x = 270, y = 350)
 
         self.User_var = StringVar()
@@ -84,31 +91,27 @@ class App:
 
     def Next(self):
         try:
-            self.HandleUsername = [self.Username_entry, self.Username_Data]
-
-            if self.HandleUsername[1].get() == '':
-                self.HandleUsername[0].configure(bg = 'red')
+            if self.Username_Data.get() == '':
+                self.Username_entry.configure(background = 'red')
             if self.Gender.get() == 0:
                 return messagebox.showinfo('notification', 'You have forgotten to choose the gender !')
-            if self.Nationality_var.get() == '':
+            if self.Nationality.get() == '':
                 return messagebox.showinfo('notification', 'You have forgotten to choose the nationality !')
-            if self.Date_Var.get() == 0:
+            if self.Date.get() == 0:
                 return messagebox.showinfo('notification', 'You have forgotten to choose the date !')
-            if self.Month_Var.get() == 0:
+            if self.Month.get() == 0:
                 return messagebox.showinfo('notification', 'You have forgotten to choose the month !')
-            if self.Date_Var.get() == 30 or self.Date_Var.get() == 31 and self.Month_Var.get() == 2:
-                return messagebox.showinfo('notification', 'Does not exist !')
-            if self.Year_Var.get() == 0:
+            if self.Year.get() == 0:
                 return messagebox.showinfo('notification', 'You have forgotten to choose the year !')
             else:
-                self.HandleUsername[0].configure(bg = 'white')
+                self.Username_entry.configure(background = 'white')
             Save = open(self.Username_Data.get(), 'a')
             Save.write(self.Username_Data.get() + '\n')
-            Save.write(str(self.Date_Var.get()) + '\n')
-            Save.write(str(self.Month_Var.get()) + '\n')
-            Save.write(str(self.Year_Var.get()) + '\n')
+            Save.write(str(self.Date.get()) + '\n')
+            Save.write(str(self.Month.get()) + '\n')
+            Save.write(str(self.Year.get()) + '\n')
             Save.write(str(self.Gender.get()) + '\n')
-            Save.write(self.Nationality_var.get() + '\n')
+            Save.write(self.Nationality.get() + '\n')
         except:
             messagebox.showinfo('Error', 'error')
 
@@ -126,34 +129,30 @@ class App:
 
         self.User_Health = Label(page, text = 'Your health: ').place(x = 150, y = 150)
         self.Cough = Checkbutton(page, text = 'Cough', variable = self.Cough_Var, onvalue = 'Cough', offvalue = 'None')
-        self.Cough.deselect()
         self.Cough.place(x = 150, y = 200)
         self.Sneeze = Checkbutton(page, text = 'Sneeze', variable = self.Sneeze_Var, onvalue = 'Sneeze', offvalue = 'None')
-        self.Sneeze.deselect()
         self.Sneeze.place(x = 150, y = 250)
         self.Snivel = Checkbutton(page, text = 'Snivel', variable = self.Snivel_Var, onvalue = 'Snivel', offvalue = 'None')
-        self.Snivel.deselect()
         self.Snivel.place(x = 150, y = 300)
         self.Shortness_Of_Breath = Checkbutton(page, text = 'Shortness of breath', variable = self.Shortness_Of_Breath_Var, onvalue = 'Shortness of breath', offvalue = 'None')
-        self.Shortness_Of_Breath.deselect()
         self.Shortness_Of_Breath.place(x = 150, y = 350) 
 
         Submit = Button(page, text = 'Submit', width = 16, command = self.Bluezone_Submit).place(x = 150, y = 400)
 
     def Bluezone_Submit(self):
-        self.entrylist = [
-            [self.User_Position_Entry, self.User_var], 
-            [self.User_Target_Entry, self.User_Target_Var], 
-        ]
-
         try:
+            self.entrylist = [
+                [self.User_Position_Entry, self.User_var], 
+                [self.User_Target_Entry, self.User_Target_Var], 
+            ]
+
             errorcount = 0
             for i in self.entrylist:
                 if i[1].get() == '':
-                    i[0].configure(bg='red')
+                    i[0].configure(background ='red')
                     errorcount += 1
                 else:
-                    i[0].configure(bg='white')
+                    i[0].configure(background ='white')
             if errorcount != 0:    
                 return messagebox.showwarning('notification', 'Missing Infomation!')
             Save = open(self.Username_Data.get(), 'a')
@@ -166,12 +165,24 @@ class App:
             Save.close()
             messagebox.showinfo('notification', 'Thank you for submiting !')
         except:
-            messagebox.showinfo('Error','error')
+            messagebox.showinfo('Error', 'error')
 
     def UpdateTime(self):
         current_time = strftime('%H:%M:%S')
         self.Show_Datetime.config(text = current_time)
         self.Show_Datetime.after(200, self.UpdateTime)
+
+    def BornMonth(self, event):
+        if int(self.Month.get()) == 1 or int(self.Month.get()) == 3 or int(self.Month.get()) == 5 or int(self.Month.get()) == 7 or int(self.Month.get()) == 8 or int(self.Month.get()) == 10 or int(self.Month.get()) == 12:
+            self.Date['values'] = self.Date_List
+        if int(self.Month.get()) == 4 or int(self.Month.get()) == 6 or int(self.Month.get()) == 9 or int(self.Month.get()) == 11:
+            self.Date['values'] = self.Date_List[0:30]
+        if int(self.Month.get()) == 2:
+            self.Date['values'] = self.Date_List[0:28]
+
+    def BornYear(self, event):
+        if int(self.Year.get()) % 4 == 0 and int(self.Month.get()) == 2:
+            self.Date['values'] = self.Date_List[0:29]
 
     def About(self):
         notification = 'This app has been created because the gornverment need to control your activities when covid-19 is raging !'
