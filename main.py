@@ -179,10 +179,15 @@ class App:
             self.Date['values'] = self.Date_List[0:30]
         if int(self.Month.get()) == 2:
             self.Date['values'] = self.Date_List[0:28]
+        if int(self.Month.get()) == 2 and int(self.Year.get()) % 4 == 0:
+            self.Date['values'] = self.Date_List[0:29]
 
     def BornYear(self, event):
-        if int(self.Year.get()) % 4 == 0:
-            self.Date['values'] = self.Date_List[0:29]
+        try:
+            if int(self.Year.get()) % 4 == 0 and int(self.Month.get()) == 2:
+                self.Date['values'] = self.Date_List[0:29]
+        except:
+            self.Date['values'] = self.Date_List[0:28]
 
     def About(self):
         notification = 'This app has been created because the gornverment need to control your activities when covid-19 is raging !'
