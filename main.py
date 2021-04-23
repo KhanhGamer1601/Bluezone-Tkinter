@@ -23,7 +23,7 @@ class App:
         self.Username = Label(self.app, text = 'Username: ').place(x = 150, y = 50)
         self.Username_Data = StringVar()
         self.Username_entry = Entry(self.app, textvariable = self.Username_Data)
-        self.Username_entry.place(x = 270, y = 50)
+        self.Username_entry.place(x = 280, y = 50)
 
         self.Date_List = [
             i for i in range(1, 32)
@@ -71,7 +71,7 @@ class App:
         self.Nationality_Label = Label(self.app, text = 'Nationality: ').place(x = 150, y = 350)
         self.Nationality = Combobox(self.app)
         self.Nationality['values'] = self.Countries
-        self.Nationality.place(x = 270, y = 350)
+        self.Nationality.place(x = 280, y = 350)
 
         self.User_var = StringVar()
         self.User_Target_Var = StringVar()
@@ -91,8 +91,20 @@ class App:
 
     def Next(self):
         try:
-            if self.Username_Data.get() == '' or self.Gender.get() == 0 or self.Nationality.get() == '' or self.Date.get() == '' or self.Month.get() == '' or self.Year.get() == '':
-                return messagebox.showwarning('notification', 'Missing Infomation!')
+            if self.Username_Data.get() == '':
+                self.Username_entry.configure(background = 'red')
+            if self.Gender.get() == 0:
+                return messagebox.showinfo('notification', 'You have forgotten to choose the gender !')
+            if self.Nationality.get() == '':
+                return messagebox.showinfo('notification', 'You have forgotten to choose the nationality !')
+            if self.Date.get() == 0:
+                return messagebox.showinfo('notification', 'You have forgotten to choose the date !')
+            if self.Month.get() == 0:
+                return messagebox.showinfo('notification', 'You have forgotten to choose the month !')
+            if self.Year.get() == 0:
+                return messagebox.showinfo('notification', 'You have forgotten to choose the year !')
+            else:
+                self.Username_entry.configure(background = 'white')
             Save = open(self.Username_Data.get(), 'a')
             Save.write(self.Username_Data.get() + '\n')
             Save.write(str(self.Date.get()) + '\n')
@@ -129,8 +141,20 @@ class App:
 
     def Bluezone_Submit(self):
         try:
-            if self.User_var.get() == '' or self.User_Target_Var.get() == '':
-                messagebox.showwarning('notification', 'Missing Information !')
+            self.entrylist = [
+                [self.User_Position_Entry, self.User_var], 
+                [self.User_Target_Entry, self.User_Target_Var], 
+            ]
+
+            errorcount = 0
+            for i in self.entrylist:
+                if i[1].get() == '':
+                    i[0].configure(background ='red')
+                    errorcount += 1
+                else:
+                    i[0].configure(background ='white')
+            if errorcount != 0:    
+                return messagebox.showwarning('notification', 'Missing Infomation!')
             Save = open(self.Username_Data.get(), 'a')
             Save.write(self.User_var.get() + '\n')
             Save.write(self.User_Target_Var.get() + '\n')
@@ -149,24 +173,31 @@ class App:
         self.Show_Datetime.after(200, self.UpdateTime)
 
     def BornMonth(self, event):
-        try:
-            if int(self.Month.get()) == 1 or int(self.Month.get()) == 3 or int(self.Month.get()) == 5 or int(self.Month.get()) == 7 or int(self.Month.get()) == 8 or int(self.Month.get()) == 10 or int(self.Month.get()) == 12:
-                self.Date['values'] = self.Date_List
-            if int(self.Month.get()) == 4 or int(self.Month.get()) == 6 or int(self.Month.get()) == 9 or int(self.Month.get()) == 11:
-                self.Date['values'] = self.Date_List[0:30]
-            if int(self.Month.get()) == 2:
-                self.Date['values'] = self.Date_List[0:28]
-            if int(self.Month.get()) == 2 and int(self.Year.get()) % 4 == 0:
-                self.Date['values'] = self.Date_List[0:29]
-        except:
+        if int(self.Month.get()) == 1 or int(self.Month.get()) == 3 or int(self.Month.get()) == 5 or int(self.Month.get()) == 7 or int(self.Month.get()) == 8 or int(self.Month.get()) == 10 or int(self.Month.get()) == 12:
             self.Date['values'] = self.Date_List
+        if int(self.Month.get()) == 4 or int(self.Month.get()) == 6 or int(self.Month.get()) == 9 or int(self.Month.get()) == 11:
+            self.Date['values'] = self.Date_List[0:30]
+        if int(self.Month.get()) == 2:
+            try:
+                if int(self.Year.get()) % 4 == 0:
+                    self.Date['values'] = self.Date_List[0:29]
+                else:
+                    self.Date['values'] = self.Date_List[0:28]
+            except:
+                self.Date['values'] = self.Date_List[0:28]
+        self.Date.set(1)
 
     def BornYear(self, event):
-        try:
-            if int(self.Year.get()) % 4 == 0 and int(self.Month.get()) == 2:
-                self.Date['values'] = self.Date_List[0:29]
-        except:
-            self.Date['values'] = self.Date_List[0:28]
+        if int(self.Year.get()) % 4 == 0:
+            try:
+                if int(self.Month.get()) == 2:
+                    self.Date['values'] = self.Date_List[0:29]
+                else:
+                    self.Date['values'] = self.Date_List[0:28]
+            except:
+                pass
+        else:
+            self.BornMonth(event)
 
     def About(self):
         notification = 'This app has been created because the gornverment need to control your activities when covid-19 is raging !'
