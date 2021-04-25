@@ -140,9 +140,9 @@ class App:
     def Bluezone_Submit(self):
         try:
             if self.User_var.get() == '':
-                messagebox.showinfo('notification', 'You have forgotten to choose your current position !')
+                return messagebox.showinfo('notification', 'You have forgotten to choose your current position !')
             if self.User_Target_Var.get() == '':
-                messagebox.showinfo('notification', 'You have forgotten to choose the position you want to come !')
+                return messagebox.showinfo('notification', 'You have forgotten to choose the position you want to come !')
             Save = open(self.Username_Data.get(), 'a')
             Save.write(self.User_var.get() + '\n')
             Save.write(self.User_Target_Var.get() + '\n')
