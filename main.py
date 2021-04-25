@@ -93,16 +93,16 @@ class App:
         try:
             if self.Username_Data.get() == '':
                 return messagebox.showinfo('notification', 'You have forgotten to choose the username !')
+            if self.Date.get() == '':
+                return messagebox.showinfo('notification', 'You have forgotten to choose the date !')
+            if self.Month.get() == '':
+                return messagebox.showinfo('notification', 'You have forgotten to choose the month !')
+            if self.Year.get() == '':
+                return messagebox.showinfo('notification', 'You have forgotten to choose the year !')
             if self.Gender.get() == 0:
                 return messagebox.showinfo('notification', 'You have forgotten to choose the gender !')
             if self.Nationality.get() == '':
                 return messagebox.showinfo('notification', 'You have forgotten to choose the nationality !')
-            if self.Date.get() == 0:
-                return messagebox.showinfo('notification', 'You have forgotten to choose the date !')
-            if self.Month.get() == 0:
-                return messagebox.showinfo('notification', 'You have forgotten to choose the month !')
-            if self.Year.get() == 0:
-                return messagebox.showinfo('notification', 'You have forgotten to choose the year !')
             Save = open(self.Username_Data.get(), 'a')
             Save.write(self.Username_Data.get() + '\n')
             Save.write(str(self.Date.get()) + '\n')
