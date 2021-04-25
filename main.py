@@ -92,7 +92,7 @@ class App:
     def Next(self):
         try:
             if self.Username_Data.get() == '':
-                self.Username_entry.configure(background = 'red')
+                return messagebox.showinfo('notification', 'You have forgotten to choose the username !')
             if self.Gender.get() == 0:
                 return messagebox.showinfo('notification', 'You have forgotten to choose the gender !')
             if self.Nationality.get() == '':
@@ -141,20 +141,10 @@ class App:
 
     def Bluezone_Submit(self):
         try:
-            self.entrylist = [
-                [self.User_Position_Entry, self.User_var], 
-                [self.User_Target_Entry, self.User_Target_Var], 
-            ]
-
-            errorcount = 0
-            for i in self.entrylist:
-                if i[1].get() == '':
-                    i[0].configure(background ='red')
-                    errorcount += 1
-                else:
-                    i[0].configure(background ='white')
-            if errorcount != 0:    
-                return messagebox.showwarning('notification', 'Missing Infomation!')
+            if self.User_var.get() == '':
+                messagebox.showinfo('notification', 'You have forgotten to choose your current position !')
+            if self.User_Target_Var.get() == '':
+                messagebox.showinfo('notification', 'You have forgotten to choose the position you want to come !')
             Save = open(self.Username_Data.get(), 'a')
             Save.write(self.User_var.get() + '\n')
             Save.write(self.User_Target_Var.get() + '\n')
